@@ -2,11 +2,23 @@ import React from 'react';
 import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import { AppLoading, Asset, Font, Icon } from 'expo';
 import AppNavigator from './navigation/AppNavigator';
+import LoginForm from './login/LoginForm';
 
 export default class App extends React.Component {
+  constructor(props){
+    super(props)
+    this.loginCompleted = this.loginCompleted.bind(this);
+  }
   state = {
     isLoadingComplete: false,
+    isLogInComplete: false,
   };
+  loginCompleted(){
+    this.setState({
+      isLogInComplete: true
+    })
+  }
+  
 
   render() {
     if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
@@ -17,7 +29,12 @@ export default class App extends React.Component {
           onFinish={this._handleFinishLoading}
         />
       );
-    } else {
+    } else if(!this.state.isLogInComplete) {
+      return (
+        <LoginForm loginCompleted={this.loginCompleted} />
+      );
+    }
+    else {
       return (
         <View style={styles.container}>
           {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
