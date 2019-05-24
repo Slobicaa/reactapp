@@ -42,8 +42,6 @@ this.setState({images: array})
     })
 }
 
-  
-
   render() {
       if(this.state.isCameraOpen) return <Camera addImg={this.addImg.bind(this)}/>
       else return (
