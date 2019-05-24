@@ -26,12 +26,12 @@ const styles = {
         fontSize: 18,
         lineHeight: 23,
         flex: 2,
-        borderRadius: 20
+        
     },
     labelStyle: {
         fontSize: 18,
         paddingLeft: 12,
-        flex: 1
+        flex: 1,
     },
     containerStyle: {
         height: 40,

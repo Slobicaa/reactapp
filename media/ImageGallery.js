@@ -1,8 +1,13 @@
 import React from 'react';
 import { Text, View, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { Button, Card, CardSection, Input, Spinner} from '../common';
 import Camera from './Camera'
 import axios from 'axios'
 export default class ImageGallery extends React.Component {
+
+  static navigationOptions = {
+    header: null,
+  };
 
   state = {
     images: [],
@@ -42,17 +47,24 @@ this.setState({images: array})
   render() {
       if(this.state.isCameraOpen) return <Camera addImg={this.addImg.bind(this)}/>
       else return (
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, marginTop: 30}}>
             <ScrollView 
+            
             style={{ flex: 1 }}
             >
-                {this.state.images.map((photo, index) => <Image key={index } style={{width: 150, height: 150}
-                }
-          source={{uri: photo.uri  || "data:image/png;base64," + (photo.base64)}} />)}
-          <TouchableOpacity
+            <Card>
+                {this.state.images.map((photo, index) => 
+                <CardSection key={index }>
+                      <Image key={index } style={{width: 200, height: 150}}
+                        source={{uri: photo.uri  || "data:image/png;base64," + (photo.base64)}} /> 
+               </CardSection> )}  
+            </Card>
+            </ScrollView>
+
+            <TouchableOpacity
                 style={{
                   flex: 0.1,
-                  alignSelf: 'flex-end',
+                  alignSelf: 'center',
                   alignItems: 'center',
                   width: 100,
                   height: 100,
@@ -61,10 +73,9 @@ this.setState({images: array})
                 onPress={() => {this.setState({isCameraOpen: true})}} >
                 <Text
                   style={{ fontSize: 18, marginBottom: 10, color: 'black' }}>
-                  {' '}Take photo{' '}
+                  {' '}Slikaj{' '}
                 </Text>
-              </TouchableOpacity>
-            </ScrollView>
+              </TouchableOpacity> 
           
         </View>
       );

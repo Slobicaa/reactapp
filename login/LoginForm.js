@@ -7,6 +7,7 @@ class LoginForm extends Component {
   constructor(props){
     super(props)
   }
+
     state = { email: 'vesovics@gmail.com', password: 'Proba123', error: '', loading: false };
     componentDidMount() {
       firebase.initializeApp({
@@ -61,7 +62,7 @@ class LoginForm extends Component {
     render() {
         return (
         <ImageBackground source = {require('../assets/images/pocetna.jpg')} style={{width: '100%', height: '100%'}}>
-          <Card>
+          <Card style = {{ marginTop: 100}}>
               <CardSection>
                 <Input
                   placeholder = "user@gmail.com"
@@ -88,8 +89,9 @@ class LoginForm extends Component {
               </Text>
 
               <CardSection>
-                {this.renderButton()}     
+                {this.renderButton()} 
               </CardSection>
+              
           </Card>
           </ImageBackground>
         );

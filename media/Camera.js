@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, View, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { Camera, Permissions } from 'expo';
+import axios from 'axios';
 
 export default class Cameraa extends React.Component {
   state = {
@@ -24,8 +25,8 @@ export default class Cameraa extends React.Component {
 
        await this.camera.takePictureAsync(options).then(photo => {
           photo.exif.Orientation = 1; 
-          this.props.addImg(photo)        
-           });     
+          this.props.addImg(photo);  
+           })  
      }
     }
   render() {

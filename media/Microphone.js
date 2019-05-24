@@ -94,7 +94,7 @@ export default class Microphone extends React.Component {
                 onPress={this.recordAudio.bind(this)} >
                 <Text
                   style={{ fontSize: 18, marginBottom: 10, color: 'black' }}>
-                  {' '}Record Audio{' '}
+                  {' '}Snimi zvuk{' '}
                 </Text>
               </TouchableOpacity>
             </View>
