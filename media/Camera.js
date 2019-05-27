@@ -5,15 +5,26 @@ import axios from 'axios';
 
 export default class Cameraa extends React.Component {
   state = {
-    hasCameraPermission: null,
-    type: Camera.Constants.Type.back,
+    hasCameraPermission: null, 
+    type: Camera.Constants.Type.back
   };
 
   async componentDidMount() {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
     this.setState({ hasCameraPermission: status === 'granted' });
   }
+  uploadImage(img) {
+    axios({
+      method: "post",
+      url: `http://192.168.43.138:8081/MyFileService/files3/slika`,
+      data: {
+        fileContent: img.base64,
+        contentType: "picture/jpg",
+        fileName: img.name
 
+      }
+    })
+  }
   
   async snapPhoto() {       
     console.log('Button Pressed');
@@ -24,8 +35,11 @@ export default class Cameraa extends React.Component {
        //await this.camera.getAvailablePictureSizesAsync("4:3").then(a => console.log(a))
 
        await this.camera.takePictureAsync(options).then(photo => {
+        photo.name = `${Math.round(Math.random()*100000)}.jpg`
           photo.exif.Orientation = 1; 
+        
           this.props.addImg(photo);  
+          this.uploadImage(photo)
            })  
      }
     }
@@ -48,7 +62,7 @@ export default class Cameraa extends React.Component {
               }}>
               <TouchableOpacity
                 style={{
-                  flex: 0.1,
+                  flex: 1,
                   alignSelf: 'flex-end',
                   alignItems: 'center',
                 }}
@@ -61,7 +75,7 @@ export default class Cameraa extends React.Component {
                 }}>
                 <Text
                   style={{ fontSize: 18, marginBottom: 10, color: 'white' }}>
-                  {' '}Flip{' '}
+                  {' '}Rotiraj{' '}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -73,7 +87,19 @@ export default class Cameraa extends React.Component {
                 onPress={this.snapPhoto.bind(this)} >
                 <Text
                   style={{ fontSize: 18, marginBottom: 10, color: 'white' }}>
-                  {' '}Capture{' '}
+                  {' '}Slikaj{' '}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  flex: 1,
+                  alignSelf: 'flex-end',
+                  alignItems: 'center',
+                }}
+                onPress={() => {this.props.closeCamera()}} >
+                <Text
+                  style={{ fontSize: 18, marginBottom: 10, color: 'white' }}>
+                  {' '}Povratak{' '}
                 </Text>
               </TouchableOpacity>
             </View>

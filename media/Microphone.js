@@ -6,7 +6,7 @@ export default class Microphone extends React.Component {
   state = {
     hasMicrophonePermission: null,
     images: [],
-    isMicrophoneOpen: true,
+    isMicrophoneOpen: false,
     duration: 0
   };
 
@@ -39,7 +39,7 @@ export default class Microphone extends React.Component {
     } else {
       return (
         <View style={{ flex: 1 }}>
-            {!this.state.isMicrophoneOpen ? 
+            {this.state.isMicrophoneOpen ? 
             <View 
             style={{ flex: 1 }}
             >
@@ -56,7 +56,7 @@ export default class Microphone extends React.Component {
                   height: 100,
                   color: 'black'
                 }}
-                onPress={() => {this.setState({isMicrophoneOpen: true})}} >
+                onPress={() => {this.setState({isMicrophoneOpen: false})}} >
                 <Text
                   style={{ fontSize: 18, marginBottom: 10, color: 'black' }}>
                   {' '}Back{' '}

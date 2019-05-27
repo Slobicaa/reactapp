@@ -7,9 +7,11 @@ import HomeScreen from '../screens/HomeScreen';
 import CameraExample from '../media/Camera';
 import Microphone from '../media/Microphone';
 import ImageGallery from '../media/ImageGallery';
+import VideoGallery from '../media/VideoGallery';
+import MicrophoneGallery from '../media/MicrophoneGallery';
 
 const HomeStack = createStackNavigator({
-  Home: HomeScreen,
+  Home: VideoGallery,
 });
 
 HomeStack.navigationOptions = {
@@ -41,7 +43,7 @@ LinksStack.navigationOptions = {
 };
 
 const SettingsStack = createStackNavigator({
-  Settings: Microphone,
+  Settings: MicrophoneGallery,
 });
 
 SettingsStack.navigationOptions = {

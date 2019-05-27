@@ -16,8 +16,19 @@ export default class ImageGallery extends React.Component {
   addImg(img){
     const x = this.state.images
     x.push(img)
-    this.setState({images: x, isCameraOpen:false})
+    this.setState({images: x, isCameraOpen:false});
   }
+  closeCamera() {
+    this.setState({isCameraOpen: false})
+  }
+  deleteImage(photo) {
+    axios.delete(`http://192.168.43.138:8081/MyFileService/files/${photo.name}/`)
+    const niz = this.state.images
+    const index = niz.indexOf(photo)
+    delete niz[index]
+    this.setState({images: niz})
+  }
+  
   componentDidMount() {
     axios.get('http://192.168.43.138:8081/MyFileService/categories/slika/')
     .then(response => response.data)
@@ -27,7 +38,7 @@ export default class ImageGallery extends React.Component {
 data.forEach((img) => {
     promises.push(axios.get(img.fileLink)
         .then(response => response.data)
-        .then(res => array.push({base64: res.content}))
+        .then(res => array.push({base64: res.content, name: res.filename}))
         .catch(error => {
             console.log(error)
             
@@ -43,7 +54,8 @@ this.setState({images: array})
 }
 
   render() {
-      if(this.state.isCameraOpen) return <Camera addImg={this.addImg.bind(this)}/>
+      const didBlurSub = this.props.navigation.addListener("willBlur", ()=> this.setState({isCameraOpen:false}))
+      if(this.state.isCameraOpen) return <Camera closeCamera={this.closeCamera.bind(this)} addImg={this.addImg.bind(this)}/>
       else return (
         <View style={{ flex: 1, marginTop: 30}}>
             <ScrollView 
@@ -55,6 +67,23 @@ this.setState({images: array})
                 <CardSection key={index }>
                       <Image key={index } style={{width: 200, height: 150}}
                         source={{uri: photo.uri  || "data:image/png;base64," + (photo.base64)}} /> 
+                      {console.log(photo.name)}
+                      <TouchableOpacity
+                        onPress={ () => this.deleteImage(photo)  }
+                        style={{
+                          flex: 1,
+                          alignSelf: 'center',
+                          alignItems: 'center',
+                          width: 100,
+                          height: 100,
+                          color: 'black'
+                        }}>
+                        <Text
+                          style={{ fontSize: 18, marginTop: 30, color: 'black' }}>
+                          {' '}Obriši{' '}
+                        </Text>
+                      </TouchableOpacity>
+
                </CardSection> )}  
             </Card>
             </ScrollView>
