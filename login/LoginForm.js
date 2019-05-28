@@ -54,15 +54,15 @@ class LoginForm extends Component {
       }
 
       return (
-        <Button onPress={this.onButtonPress.bind(this)} text = "Uloguj se" />
+        <Button onPress={this.onButtonPress.bind(this)} text = "Uloguj se" style ={{backgroundColor:'rgba(255,255,255,0.6)'}}/>
       );
     }
 
     render() {
         return (
         <ImageBackground source = {require('../assets/images/pocetna.jpg')} style={{width: '100%', height: '100%'}}>
-          <Card style = {{ marginTop: 100}}>
-              <CardSection>
+          <Card style = {{ marginTop: 100, backgroundColor:'rgba(255,255,255,0.5)', borderRadius: 10}}>
+              <CardSection style={{backgroundColor:'transparent', borderBottomWidth:0}}> 
                 <Input
                   placeholder = "user@gmail.com"
                   placeholderTextColor = "rgba(0,0,0,0.5)"
@@ -73,13 +73,14 @@ class LoginForm extends Component {
                 />
               </CardSection>
 
-              <CardSection>
+              <CardSection style={{backgroundColor:'transparent', borderBottomWidth:0}}>
                   <Input
                     secureTextEntry
                     placeholder = "abcdefg"
                     label = "Lozinka"
                     value = {this.state.password}
                     onChangeText = {password => this.setState({ password})}
+                    backgroundColor="transparent"
                   />
               </CardSection>
 
@@ -87,7 +88,7 @@ class LoginForm extends Component {
                 {this.state.error}
               </Text>
 
-              <CardSection>
+              <CardSection style={{backgroundColor:'transparent',  borderBottomWidth:0}}>
                 {this.renderButton()} 
               </CardSection>
               

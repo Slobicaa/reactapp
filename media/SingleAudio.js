@@ -3,7 +3,7 @@ import { Constants, Video } from 'expo';
 import { Button, Card, CardSection, Input, Spinner} from '../common';
 import { Text, View, TouchableOpacity, Image, ScrollView } from 'react-native';
 
-export default class SingleVideo extends React.Component {
+export default class SingleAudio extends React.Component {
     state= {
         isPlaying: false,
         buttonText: "Pokreni"
@@ -50,7 +50,7 @@ export default class SingleVideo extends React.Component {
         
         
         <TouchableOpacity
-        onPress={ () => this.props.deleteVideo(this.props.data)  }
+        onPress={ () => this.props.deleteAudio(this.props.data)  }
         style={{
             flex: 1,
             alignSelf: 'center',

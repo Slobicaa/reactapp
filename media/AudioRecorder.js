@@ -2,15 +2,18 @@ import React from 'react';
 import { Button, Text, Header, Body, Icon, Title, Spinner } from 'native-base';
 import { Camera, Permissions, FileSystem } from 'expo';
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
-
+import Layout from './Layout';
+import delay from 'delay';
+import shortid from 'shortid';
 import axios from 'axios'
+//import RNFetchBlob from 'react-native-fetch-blob'
 const printChronometer = seconds => {
   const minutes = Math.floor(seconds / 60);
   const remseconds = seconds % 60;
   return '' + (minutes < 10 ? '0' : '') + minutes + ':' + (remseconds < 10 ? '0' : '') + remseconds;
 };
 
-export default class VideoRecorder extends React.Component {
+export default class AudioRecorder extends React.Component {
   state = {
     hasCameraPermission: null,
     type: Camera.Constants.Type.back,
@@ -23,22 +26,22 @@ export default class VideoRecorder extends React.Component {
     const { status: audioStatus } = await Permissions.askAsync(Permissions.AUDIO_RECORDING);
     this.setState({ hasCameraPermission: cameraStatus === 'granted' && audioStatus === 'granted' });
   }
- async getBase64(file){
-   const x = await FileSystem.readAsStringAsync(file, {encoding: FileSystem.EncodingTypes.Base64})
-   return x
- }
- uploadVideo(video) {
-  axios({
-    method: "post",
-    url: `http://192.168.43.138:8081/MyFileService/files3/video`,
-    data: {
-      fileContent: video.base64,
-      contentType: "video/mp4",
-      fileName: video.name
-
+ getBase64(file){
+   let reader = new FileReader();
+   fetch("GET", file)
+   .then(file => {
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      console.log("res" + reader.result);
     }
-  })
-}
+    reader.onerror = error => {
+      console.log("err" + error);
+    }
+   }
+    
+   )
+   
+ }
   async startRecording() {
     if (!this.camera) {
       return;
@@ -47,12 +50,17 @@ export default class VideoRecorder extends React.Component {
 
     await this.setState(state => ({ ...state, recording: true }));
     const record = await this.camera.recordAsync();
-    record.name = `${Math.round(Math.random()*100000)}.mp4`
-    this.props.addVideo(record)
-    record.base64 = await this.getBase64(record.uri)
-    this.uploadVideo(record)
+    console.log(record);
+    //this.props.addVideo(record)
+    //const data = new FormData()
+    // data.append('document', {
+    //     uri: record.uri,
+    //     name:  `${Math.round(Math.random()*100000)}.mp4`,
+    //     type: 'application/base64'
+    // })
+      this.getBase64(record.uri)
   }
-  
+
   async stopRecording() {
     if (!this.camera) {
       return;

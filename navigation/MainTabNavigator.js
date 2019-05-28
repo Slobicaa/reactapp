@@ -5,10 +5,10 @@ import { createStackNavigator, createBottomTabNavigator } from 'react-navigation
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
 import CameraExample from '../media/Camera';
-import Microphone from '../media/Microphone';
+//import Audio from '../media/Microphone';
 import ImageGallery from '../media/ImageGallery';
 import VideoGallery from '../media/VideoGallery';
-import MicrophoneGallery from '../media/MicrophoneGallery';
+import AudioGallery from '../media/AudioGallery';
 
 const HomeStack = createStackNavigator({
   Home: VideoGallery,
@@ -43,7 +43,7 @@ LinksStack.navigationOptions = {
 };
 
 const SettingsStack = createStackNavigator({
-  Settings: MicrophoneGallery,
+  Settings: AudioGallery,
 });
 
 SettingsStack.navigationOptions = {

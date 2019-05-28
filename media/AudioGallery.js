@@ -1,44 +1,44 @@
 import React, { Component } from 'react';
-import SingleVideo from './SingleVideo';
+import SingleAudio from './SingleAudio';
 import { Text, View, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { Button, Card, CardSection, Input, Spinner} from '../common';
 import Camera from './Camera'
 import axios from 'axios'
-import VideoRecorder from './VideoRecoder';
-export default class VideoGallery extends React.Component {
+import AudioRecorder from './AudioRecorder';
+export default class AudioGallery extends React.Component {
 
   static navigationOptions = {
     header: null,
   };
 
   state = {
-    videos: [],
-    isCameraOpen: false
+    audios: [],
+    isMicrophoneOpen: false
   };
-  addVideo(v){
-    const x = this.state.videos
+  addAudio(a){
+    const x = this.state.audios
     x.push(v)
-    this.setState({videos: x, isCameraOpen:false})
+    this.setState({audios: x, isMicrophoneOpen:false})
   }
-  closeCamera() {
-    this.setState({isCameraOpen: false})
+  closeMicrophone() {
+    this.setState({isMicrophoneOpen: false})
   }
-  deleteVideo(video) {
-    axios.delete(`http://192.168.43.138:8081/MyFileService/files/${video.name}/`)
-    const niz = this.state.videos
-    const index = niz.indexOf(video)
+  deleteAudio(audio) {
+    axios.delete(`http://192.168.43.138:8081/MyFileService/files/${audio.name}/`)
+    const niz = this.state.audios
+    const index = niz.indexOf(audio)
     delete niz[index]
-    this.setState({videos: niz})
+    this.setState({audios: niz})
   }
- 
+  
   componentDidMount() {
-    axios.get('http://192.168.43.138:8081/MyFileService/categories/video/')
+    axios.get('http://192.168.43.138:8081/MyFileService/categories/audio/')
     .then(response => response.data)
     .then(data => {
         const array = []
         const promises = []
-data.forEach((video) => {
-    promises.push(axios.get(video.fileLink)
+data.forEach((audio) => {
+    promises.push(axios.get(audio.fileLink)
         .then(response => response.data)
         .then(res => array.push({base64: res.content, name: res.filename}))
         .catch(error => {
@@ -49,7 +49,7 @@ data.forEach((video) => {
 })
 Promise.all(promises)
     .then( () => {
-this.setState({videos: array})
+this.setState({audios: array})
     })
 
     })
@@ -57,7 +57,7 @@ this.setState({videos: array})
 
   render() {
       //const didBlurSub = this.props.navigation.addListener("willBlur", ()=> this.setState({isCameraOpen:false}))
-      if(this.state.isCameraOpen) return <VideoRecorder closeCamera={this.closeCamera.bind(this)} addVideo={this.addVideo.bind(this)}/>
+      if(this.state.isMicrophoneOpen) return <AudioRecorder closeMicrophone={this.closeMicrophone.bind(this)} addAudio={this.addAudio.bind(this)}/>
       else return (
         <View style={{ flex: 1, marginTop: 30}}>
             <ScrollView 
@@ -65,9 +65,9 @@ this.setState({videos: array})
             style={{ flex: 1 }}
             >
             <Card>
-                {this.state.videos.map((video, index) => 
+                {this.state.audios.map((audio, index) => 
                 
-                      <SingleVideo key={Math.random()} data={video} deleteVideo={this.deleteVideo.bind(this)}/>
+                      <SingleAudio key={Math.random()} data={audio} deleteAudio={this.deleteAudio.bind(this)}/>
 
                )}  
             </Card>
@@ -82,10 +82,10 @@ this.setState({videos: array})
                   height: 100,
                   color: 'black'
                 }}
-                onPress={() => {this.setState({isCameraOpen: true})}} >
+                onPress={() => {this.setState({isMicrophoneOpen: true})}} >
                 <Text
                   style={{ fontSize: 18, marginBottom: 10, color: 'black' }}>
-                  {' '}Snimi video{' '}
+                  {' '}Snimi audio{' '}
                 </Text>
               </TouchableOpacity> 
           
