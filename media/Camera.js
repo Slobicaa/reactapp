@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { Text, View, TouchableOpacity } from 'react-native';
 import { Camera, Permissions } from 'expo';
 import axios from 'axios';
 
@@ -21,18 +21,14 @@ export default class Cameraa extends React.Component {
         fileContent: img.base64,
         contentType: "picture/jpg",
         fileName: img.name
-
       }
     })
   }
   
   async snapPhoto() {       
-    console.log('Button Pressed');
     if (this.camera) {
-       console.log('Taking photo');
        const options = { quality: 1, base64: true, fixOrientation: true, pictureSize:"320x240",
        exif: true};
-       //await this.camera.getAvailablePictureSizesAsync("4:3").then(a => console.log(a))
 
        await this.camera.takePictureAsync(options).then(photo => {
         photo.name = `${Math.round(Math.random()*100000)}.jpg`
@@ -104,7 +100,6 @@ export default class Cameraa extends React.Component {
               </TouchableOpacity>
             </View>
           </Camera>
-          
         </View>
       );
     }

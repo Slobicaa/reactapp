@@ -11,15 +11,16 @@ export default class SingleVideo extends React.Component {
     playOrPause(){
         this.setState( prevState => ({
             isPlaying: prevState.isPlaying ? false : true,
-            buttonText: prevState.isPlaying ? "Pokreni" : "Zaustavi"
+            //buttonText: prevState.isPlaying ? "Pokreni" : "Zaustavi"
         }) )
     }
     render(){
         data = this.props.data
         return(
-      <Card key={Math.random()} style={{flexDirection:'row', justifyContent:'space-between'}}>
-       {/* <CardSection> */}
+      <Card key={Math.random()} /*style={{flexDirection:'row', justifyContent:'space-between'}}*/>
+       <CardSection> 
         <Video
+        useNativeControls
           source={{uri: data.uri  || "data:video/mp4;base64," + (data.base64)}}
           rate={1.0}
           volume={1.0}
@@ -27,11 +28,11 @@ export default class SingleVideo extends React.Component {
           resizeMode="cover"
           shouldPlay = {this.state.isPlaying}
           isLooping
-          style={{ width: 250, height: 170 }}
+          style={{ width: 250, height: 200 }}
         />
         
         <View>
-        <TouchableOpacity
+        {/*<TouchableOpacity
             onPress={ () => this.playOrPause()  }
             style={{
                 flex: 1,
@@ -46,7 +47,7 @@ export default class SingleVideo extends React.Component {
                 style={{ fontSize: 18, color: 'black' }}>
                 {' ' + this.state.buttonText +' '}
             </Text>
-        </TouchableOpacity>
+        </TouchableOpacity>*/}
         
         
         <TouchableOpacity
@@ -56,8 +57,8 @@ export default class SingleVideo extends React.Component {
             alignSelf: 'center',
             alignItems: 'center',
             justifyContent: 'center',
-            //width: '100%',
-            //height: 30,
+            width: 100,
+            height: 100,
             color: 'black'
         }}>
         <Text
@@ -66,7 +67,7 @@ export default class SingleVideo extends React.Component {
         </Text>
         </TouchableOpacity>
         </View>
-       {/* </CardSection> */}
+        </CardSection> 
       </Card>
         )
     }

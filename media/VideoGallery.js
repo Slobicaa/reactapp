@@ -56,7 +56,7 @@ this.setState({videos: array})
 }
 
   render() {
-      //const didBlurSub = this.props.navigation.addListener("willBlur", ()=> this.setState({isCameraOpen:false}))
+      const didBlurSub = this.props.navigation.addListener("willBlur", ()=> this.setState({isCameraOpen:false}))
       if(this.state.isCameraOpen) return <VideoRecorder closeCamera={this.closeCamera.bind(this)} addVideo={this.addVideo.bind(this)}/>
       else return (
         <View style={{ flex: 1, marginTop: 30}}>

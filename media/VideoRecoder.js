@@ -69,7 +69,6 @@ export default class VideoRecorder extends React.Component {
 
   render() {
     const { hasCameraPermission, recording, duration } = this.state;
-console.log(recording)
     if (hasCameraPermission === null) {
       return (
           <Spinner />

@@ -1,74 +1,73 @@
 import React from 'react';
 import { Button, Text, Header, Body, Icon, Title, Spinner } from 'native-base';
-import { Camera, Permissions, FileSystem } from 'expo';
+import { FileSystem, Permissions, Audio } from 'expo';
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
-import Layout from './Layout';
-import delay from 'delay';
-import shortid from 'shortid';
 import axios from 'axios'
-//import RNFetchBlob from 'react-native-fetch-blob'
-const printChronometer = seconds => {
-  const minutes = Math.floor(seconds / 60);
-  const remseconds = seconds % 60;
-  return '' + (minutes < 10 ? '0' : '') + minutes + ':' + (remseconds < 10 ? '0' : '') + remseconds;
-};
 
 export default class AudioRecorder extends React.Component {
   state = {
-    hasCameraPermission: null,
-    type: Camera.Constants.Type.back,
+    hasAudioPermission: null,
     recording: false,
     duration: 0,
   };
-
-  async componentWillMount() {
-    const { status: cameraStatus } = await Permissions.askAsync(Permissions.CAMERA);
+  
+  async componentDidMount() {
     const { status: audioStatus } = await Permissions.askAsync(Permissions.AUDIO_RECORDING);
-    this.setState({ hasCameraPermission: cameraStatus === 'granted' && audioStatus === 'granted' });
+    this.setState({ hasAudioPermission: audioStatus === 'granted' });
   }
- getBase64(file){
-   let reader = new FileReader();
-   fetch("GET", file)
-   .then(file => {
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      console.log("res" + reader.result);
-    }
-    reader.onerror = error => {
-      console.log("err" + error);
-    }
-   }
-    
-   )
-   
- }
-  async startRecording() {
-    if (!this.camera) {
-      return;
-    }
-    const options = { quality: "480p", maxDuration: 60}
 
+  async getBase64(file){
+    const x = await FileSystem.readAsStringAsync(file, {encoding: FileSystem.EncodingTypes.Base64})
+    return x
+  }
+
+  uploadAudio(audio) {
+    axios({
+      method: "post",
+      url: `http://192.168.43.138:8081/MyFileService/files3/audio`,
+      data: {
+        fileContent: audio.base64,
+        contentType: "audio/mp3",
+        fileName: audio.name
+  
+      }
+    })
+  }
+ 
+  async startRecording() {
+    const recording = new Audio.Recording();
+    try {
+      await recording.prepareToRecordAsync(Audio.RECORDING_OPTIONS_PRESET_LOW_QUALITY);
+      this.recording = recording
+      await recording.startAsync();
+    } catch (error) {
+      console.log("An error has occured")
+    }
     await this.setState(state => ({ ...state, recording: true }));
-    const record = await this.camera.recordAsync();
-    console.log(record);
-    //this.props.addVideo(record)
-    //const data = new FormData()
-    // data.append('document', {
-    //     uri: record.uri,
-    //     name:  `${Math.round(Math.random()*100000)}.mp4`,
-    //     type: 'application/base64'
-    // })
-      this.getBase64(record.uri)
   }
 
   async stopRecording() {
-    if (!this.camera) {
-      return;
+    try {
+      await this.recording.stopAndUnloadAsync()
+    } catch (error) {
+      
     }
-
-    await this.camera.stopRecording();
+    const uri = this.recording.getURI();
+    const data = {
+      uri,
+      name: `${Math.round(Math.random()*100000)}.3gp`
+    }
+    this.props.addAudio(data)
+    data.base64 = await this.getBase64(data.uri)
+    this.uploadAudio(data)
   }
-
+  async componentWillUnmount(){
+    try {
+      await this.recording.stopAndUnloadAsync()
+    } catch (error) {
+      
+    }
+  }
   toggleRecording() {
     const { recording } = this.state;
 
@@ -76,45 +75,26 @@ export default class AudioRecorder extends React.Component {
   }
 
   render() {
-    const { hasCameraPermission, recording, duration } = this.state;
-console.log(recording)
-    if (hasCameraPermission === null) {
+    const { hasAudioPermission, recording, duration } = this.state;
+    if (hasAudioPermission === null) {
       return (
           <Spinner />
       );
-    } else if (hasCameraPermission === false) {
+    } else if (hasAudioPermission === false) {
       return (
-          <Text>No access to camera</Text>
+          <Text>No access to microphone</Text>
       )
     } else {
       return (
         <View style={{ flex: 1 }}>
             
-        <Camera style={{ flex: 1 }} type={this.state.type} ref={ (ref) => {this.camera = ref} }>
         <View
           style={{
             flex: 1,
             backgroundColor: 'transparent',
             flexDirection: 'row',
           }}>
-          <TouchableOpacity
-            style={{
-              flex: 1,
-              alignSelf: 'flex-end',
-              alignItems: 'center',
-            }}
-            onPress={() => {
-              this.setState({
-                type: this.state.type === Camera.Constants.Type.back
-                  ? Camera.Constants.Type.front
-                  : Camera.Constants.Type.back,
-              });
-            }}>
-            <Text
-              style={{ fontSize: 18, marginBottom: 10, color: 'white' }}>
-              {' '}Rotiraj{' '}
-            </Text>
-          </TouchableOpacity>
+          
           <TouchableOpacity
             style={{
               flex: 1,
@@ -123,7 +103,7 @@ console.log(recording)
             }}
             onPress={this.toggleRecording.bind(this)} >
             <Text
-              style={{ fontSize: 18, marginBottom: 10, color: 'white' }}>
+              style={{ fontSize: 18, marginBottom: 10, color: 'black' }}>
               {' ' + (recording ? 'Sačuvaj' : 'Snimi') + ' '}
             </Text>
           </TouchableOpacity>
@@ -133,14 +113,19 @@ console.log(recording)
               alignSelf: 'flex-end',
               alignItems: 'center',
             }}
-            onPress={() => {this.props.closeCamera()}} >
+            onPress={() => {
+              try {
+                this.recording.stopAndUnloadAsync()
+              } catch (error) {
+                
+              }
+              this.props.closeMicrophone()}} >
             <Text
-              style={{ fontSize: 18, marginBottom: 10, color: 'white' }}>
+              style={{ fontSize: 18, marginBottom: 10, color: 'black' }}>
               {' '}Povratak{' '}
             </Text>
           </TouchableOpacity>
         </View>
-      </Camera>
       
     </View>
       );

@@ -1,8 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import SingleAudio from './SingleAudio';
 import { Text, View, TouchableOpacity, Image, ScrollView } from 'react-native';
-import { Button, Card, CardSection, Input, Spinner} from '../common';
-import Camera from './Camera'
+import { Card } from '../common';
 import axios from 'axios'
 import AudioRecorder from './AudioRecorder';
 export default class AudioGallery extends React.Component {
@@ -15,7 +14,7 @@ export default class AudioGallery extends React.Component {
     audios: [],
     isMicrophoneOpen: false
   };
-  addAudio(a){
+  addAudio(v){
     const x = this.state.audios
     x.push(v)
     this.setState({audios: x, isMicrophoneOpen:false})
@@ -56,7 +55,7 @@ this.setState({audios: array})
 }
 
   render() {
-      //const didBlurSub = this.props.navigation.addListener("willBlur", ()=> this.setState({isCameraOpen:false}))
+      const didBlurSub = this.props.navigation.addListener("willBlur", ()=> this.setState({isMicrophoneOpen:false}))
       if(this.state.isMicrophoneOpen) return <AudioRecorder closeMicrophone={this.closeMicrophone.bind(this)} addAudio={this.addAudio.bind(this)}/>
       else return (
         <View style={{ flex: 1, marginTop: 30}}>
@@ -66,9 +65,7 @@ this.setState({audios: array})
             >
             <Card>
                 {this.state.audios.map((audio, index) => 
-                
-                      <SingleAudio key={Math.random()} data={audio} deleteAudio={this.deleteAudio.bind(this)}/>
-
+                <SingleAudio  key={Math.random()} data={audio} deleteAudio={this.deleteAudio.bind(this)}/>
                )}  
             </Card>
             </ScrollView>
@@ -88,7 +85,6 @@ this.setState({audios: array})
                   {' '}Snimi audio{' '}
                 </Text>
               </TouchableOpacity> 
-          
         </View>
       );
     }

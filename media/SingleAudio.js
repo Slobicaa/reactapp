@@ -1,7 +1,7 @@
 import React from 'react'
-import { Constants, Video } from 'expo';
-import { Button, Card, CardSection, Input, Spinner} from '../common';
-import { Text, View, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { Video } from 'expo';
+import { Card, CardSection } from '../common';
+import { Text, View, TouchableOpacity, Image } from 'react-native';
 
 export default class SingleAudio extends React.Component {
     state= {
@@ -17,8 +17,13 @@ export default class SingleAudio extends React.Component {
     render(){
         data = this.props.data
         return(
-      <Card key={Math.random()} style={{flexDirection:'row', justifyContent:'space-between'}}>
-       {/* <CardSection> */}
+      <Card key={Math.random()} style={{flexDirection:'row', padding: 20, justifyContent:'space-between'}}>
+        <CardSection style={{flexDirection:'column'}}> 
+        <Text>{data.name}</Text>
+        <Image style={{width: 150, height: 100}}
+                        source= {{uri:"https://img.icons8.com/metro/420/speaker.png"}} />
+        
+        </CardSection>
         <Video
           source={{uri: data.uri  || "data:video/mp4;base64," + (data.base64)}}
           rate={1.0}
@@ -27,7 +32,7 @@ export default class SingleAudio extends React.Component {
           resizeMode="cover"
           shouldPlay = {this.state.isPlaying}
           isLooping
-          style={{ width: 250, height: 170 }}
+          style={{ width: 0, height: 0 }}
         />
         
         <View>
@@ -66,7 +71,6 @@ export default class SingleAudio extends React.Component {
         </Text>
         </TouchableOpacity>
         </View>
-       {/* </CardSection> */}
       </Card>
         )
     }

@@ -41,12 +41,12 @@ class LoginForm extends Component {
         this.setState({ error: 'Authentication Failed.', loading: false });
     }
     
-    onLoginSuccess() {
+    /*onLoginSuccess() {
       console.log("sucess");
       console.log(this.props.navigation);
       this.props.navigation.navigate("Main");
       this.setState({loading:false})
-    }
+    }*/
 
     renderButton() {
       if (this.state.loading) {
@@ -69,7 +69,7 @@ class LoginForm extends Component {
                   label = "Email" 
                   value = {this.state.email}
                   onChangeText={email => this.setState({ email })}
-                  backgroundColor="transparent"
+                  //backgroundColor="transparent"
                 />
               </CardSection>
 
@@ -80,7 +80,7 @@ class LoginForm extends Component {
                     label = "Lozinka"
                     value = {this.state.password}
                     onChangeText = {password => this.setState({ password})}
-                    backgroundColor="transparent"
+                    //backgroundColor="transparent"
                   />
               </CardSection>
 

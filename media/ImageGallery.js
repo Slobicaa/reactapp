@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, View, TouchableOpacity, Image, ScrollView } from 'react-native';
-import { Button, Card, CardSection, Input, Spinner} from '../common';
+import { Card, CardSection } from '../common';
 import Camera from './Camera'
 import axios from 'axios'
 export default class ImageGallery extends React.Component {
@@ -41,7 +41,6 @@ data.forEach((img) => {
         .then(res => array.push({base64: res.content, name: res.filename}))
         .catch(error => {
             console.log(error)
-            
         })
     )
 })
